@@ -2,9 +2,9 @@ import type { Dictionary } from "../dictionaries";
 
 const id: Dictionary = {
   meta: {
-    title: "Nama Kamu — Full-Stack Developer",
+    title: "Isal Nevada — Full-Stack Developer",
     description:
-      "Portofolio Nama Kamu, seorang full-stack developer yang membangun produk web cepat, aksesibel, dan skalabel dengan React, Next.js, dan TypeScript.",
+      "Portofolio Isal Nevada, seorang full-stack developer yang membangun produk web cepat, aksesibel, dan skalabel dengan React, Next.js, dan TypeScript.",
     keywords: [
       "full-stack developer",
       "web developer",
@@ -42,7 +42,7 @@ const id: Dictionary = {
   hero: {
     availability: "Terbuka untuk proyek baru",
     greeting: "Hai, saya",
-    name: "Nama Kamu",
+    name: "Isal Nevada",
     role: "Full-Stack Developer",
     tagline:
       "Saya merancang dan membangun produk web yang cepat, aksesibel, dan skalabel — dari antarmuka yang rapi sampai API di baliknya.",
@@ -85,7 +85,6 @@ const id: Dictionary = {
         description:
           "Platform analitik real-time dengan grafik kustom, akses berbasis peran, dan performa query di bawah satu detik.",
         tags: ["Next.js", "TypeScript", "PostgreSQL"],
-        href: "https://example.com",
         year: "2025",
       },
       {
@@ -93,7 +92,6 @@ const id: Dictionary = {
         description:
           "Storefront commerce headless dengan pencarian super cepat, keranjang optimistis, dan alur checkout bertipe penuh.",
         tags: ["React", "Node.js", "Stripe"],
-        href: "https://example.com",
         year: "2024",
       },
       {
@@ -101,7 +99,6 @@ const id: Dictionary = {
         description:
           "Pustaka komponen aksesibel dengan theming, dokumentasi, dan pengujian regresi visual otomatis.",
         tags: ["React", "Tailwind CSS", "Storybook"],
-        href: "https://example.com",
         year: "2024",
       },
     ],

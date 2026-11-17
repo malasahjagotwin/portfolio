@@ -1,10 +1,11 @@
 export const siteConfig = {
   url: "https://proxi.cc.cd",
-  email: "hello@example.com",
+  email: "isalnevada@icloud.com",
+  // LinkedIn and X placeholders were removed rather than pointed at
+  // "username": those URLs resolve to somebody else's real profiles.
   socials: [
-    { key: "github", label: "GitHub", href: "https://github.com/username" },
-    { key: "linkedin", label: "LinkedIn", href: "https://linkedin.com/in/username" },
-    { key: "x", label: "X", href: "https://x.com/username" },
+    { key: "github", label: "GitHub", href: "https://github.com/malasahjagotwin" },
+    { key: "discord", label: "Discord", href: "https://discord.gg/xeApeeRBkB" },
   ],
 } as const;
 

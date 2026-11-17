@@ -15,19 +15,19 @@ export function Projects({ dict }: ProjectsProps) {
       />
 
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {dict.projects.items.map((project) => (
-          <li key={project.title}>
-            <a
-              href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition-colors hover:border-accent"
-            >
+        {dict.projects.items.map((project) => {
+          const body = (
+            <>
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-lg font-semibold text-foreground">
                   {project.title}
                 </h3>
-                <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-colors group-hover:text-accent" />
+                {project.href ? (
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="h-5 w-5 shrink-0 text-muted transition-colors group-hover:text-accent"
+                  />
+                ) : null}
               </div>
 
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
@@ -48,12 +48,38 @@ export function Projects({ dict }: ProjectsProps) {
                 <span className="text-xs text-muted">{project.year}</span>
               </div>
 
-              <span className="sr-only">
-                {dict.projects.viewLabel} {dict.a11y.newTab}
-              </span>
-            </a>
-          </li>
-        ))}
+              {project.href ? (
+                <span className="sr-only">
+                  {dict.projects.viewLabel} {dict.a11y.newTab}
+                </span>
+              ) : null}
+            </>
+          );
+
+          return (
+            <li key={project.title}>
+              {/*
+               * A card is only a link when there is somewhere to go. The
+               * placeholder entries have no href, and a card pointing at
+               * example.com is a dead end masquerading as a project.
+               */}
+              {project.href ? (
+                <a
+                  href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition-colors hover:border-accent"
+                >
+                  {body}
+                </a>
+              ) : (
+                <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-6">
+                  {body}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </Section>
   );

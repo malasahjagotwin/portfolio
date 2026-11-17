@@ -1,8 +1,20 @@
+/*
+ * href is optional on purpose: a card only becomes a link when there is
+ * somewhere real to go, so an entry without one renders as a plain card.
+ */
+type ProjectItem = {
+  title: string;
+  description: string;
+  tags: string[];
+        year: string;
+  href?: string;
+};
+
 const en = {
   meta: {
-    title: "Your Name — Full-Stack Developer",
+    title: "Isal Nevada — Full-Stack Developer",
     description:
-      "Portfolio of Your Name, a full-stack developer building fast, accessible and scalable web products with React, Next.js and TypeScript.",
+      "Portfolio of Isal Nevada, a full-stack developer building fast, accessible and scalable web products with React, Next.js and TypeScript.",
     keywords: [
       "full-stack developer",
       "web developer",
@@ -40,7 +52,7 @@ const en = {
   hero: {
     availability: "Available for new projects",
     greeting: "Hi, I'm",
-    name: "Your Name",
+    name: "Isal Nevada",
     role: "Full-Stack Developer",
     tagline:
       "I design and build fast, accessible and scalable web products — from pixel-perfect interfaces to the APIs behind them.",
@@ -83,7 +95,6 @@ const en = {
         description:
           "A real-time analytics platform with custom charting, role-based access and sub-second query performance.",
         tags: ["Next.js", "TypeScript", "PostgreSQL"],
-        href: "https://example.com",
         year: "2025",
       },
       {
@@ -91,7 +102,6 @@ const en = {
         description:
           "Headless commerce storefront with blazing-fast search, optimistic cart and a fully typed checkout flow.",
         tags: ["React", "Node.js", "Stripe"],
-        href: "https://example.com",
         year: "2024",
       },
       {
@@ -99,10 +109,9 @@ const en = {
         description:
           "An accessible component library with theming, documentation and automated visual regression tests.",
         tags: ["React", "Tailwind CSS", "Storybook"],
-        href: "https://example.com",
         year: "2024",
       },
-    ],
+    ] as ProjectItem[],
   },
   contact: {
     title: "Let's work together",
