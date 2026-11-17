@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 /*
  * Last-resort boundary: this replaces the root layout when that layout itself
  * throws, so it must supply <html> and <body> and cannot rely on either the
@@ -58,7 +60,7 @@ export default function GlobalError({
             >
               Coba lagi
             </button>
-            <a
+            <Link
               href="/id"
               style={{
                 borderRadius: "999px",
@@ -72,7 +74,7 @@ export default function GlobalError({
               }}
             >
               Kembali ke beranda
-            </a>
+            </Link>
           </div>
         </div>
       </body>
