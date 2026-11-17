@@ -5,7 +5,10 @@ export const siteConfig = {
   // "username": those URLs resolve to somebody else's real profiles.
   socials: [
     { key: "github", label: "GitHub", href: "https://github.com/malasahjagotwin" },
-    { key: "discord", label: "Discord", href: "https://discord.gg/xeApeeRBkB" },
+    { key: "telegram", label: "Telegram", href: "https://t.me/tanpoint" },
+    // Permanent invite (max_age 0) on the server's #welcome channel. The
+    // previous link expired on its 30-day timer, so it 404'd for visitors.
+    { key: "discord", label: "Discord", href: "https://discord.gg/wQzgDVpAg5" },
   ],
 } as const;
 
