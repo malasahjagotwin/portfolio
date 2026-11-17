@@ -1,5 +1,5 @@
 export const siteConfig = {
-  url: "https://example.com",
+  url: "https://proxi.cc.cd",
   email: "hello@example.com",
   socials: [
     { key: "github", label: "GitHub", href: "https://github.com/username" },
