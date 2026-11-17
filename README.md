@@ -17,7 +17,14 @@ Two Next 16 features shape how this app is written, and both are on in `next.con
 
 ## Requirements
 
-Node **20.9 or newer** (`engines.node`). Verify before deploying: `next start` returns 500 on every route under bleeding-edge Node releases, and the build still succeeds, so the failure only shows up at runtime.
+Node **20.9 or newer** (`engines.node`). CI and the Docker image pin Node 22.
+
+A previous note here claimed `next start` answered 500 on every route under
+pre-release Node builds while the build still succeeded. That did not reproduce
+on v26.10.0: `/id` and `/en` served 200, `/` returned the 308 to `/id`, an
+unknown path 404'd, and `POST /api/contact` 405'd. The pin at 22 is kept because
+that is the version CI actually exercises, not because newer versions are known
+broken.
 
 ## Getting started
 
@@ -39,6 +46,37 @@ Copy `.env.example` to `.env.local`:
 | `CONTACT_WEBHOOK_URL` | in production | Where `POST /api/contact` forwards submissions. Without it the endpoint returns **503** in production rather than silently discarding the message; in development it logs and returns 200 so the form stays testable. |
 
 The webhook receives `{ name, email, message }` as JSON.
+
+## Deploy
+
+Two containers, and Caddy handles TLS for `proxi.cc.cd` on its own:
+
+```bash
+cp .env.example .env      # fill in CONTACT_WEBHOOK_URL
+docker compose up -d --build
+```
+
+`app` is not published to the host — only Caddy reaches it, over the compose
+network, by service name. `compose.yaml` and `deploy/Caddyfile` hold the
+details, including how to drop Caddy and point an existing nginx at the app
+instead.
+
+DNS for the domain has to point at the host before the first start; Caddy
+validates over HTTP, so it cannot get a certificate otherwise.
+
+To survive reboots, install the unit:
+
+```bash
+sudo cp deploy/portfolio.service /etc/systemd/system/
+sudo systemctl enable --now portfolio
+```
+
+Its `WorkingDirectory` is `/opt/portfolio` — change it if the repo lives
+elsewhere. Because the unit passes `--build`, `git pull` followed by
+`systemctl restart portfolio` is a complete deploy.
+
+The image runs the traced server from `.next/standalone` rather than
+`next start`, so the runtime it ships is the one the build was verified against.
 
 ## Editing the content
 
@@ -68,6 +106,9 @@ src/components/           navbar, mobile nav, theme + language switchers, form
 src/components/sections/  hero, about, projects, contact
 src/lib/i18n/             locales, dictionaries, useLocaleFromPathname
 ```
+
+Deployment lives outside `src/`: `Dockerfile`, `compose.yaml`, and `deploy/`
+(Caddyfile + systemd unit).
 
 ## Accessibility
 

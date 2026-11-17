@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The Docker image runs the traced server from .next/standalone instead of
+  // `next start`, so it carries only the dependencies the build actually used.
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {

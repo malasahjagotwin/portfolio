@@ -6,8 +6,8 @@ export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
 /*
- * Monogram rather than a fixed mark, so replacing the placeholder identity in
- * the dictionary also fixes the tab icon.
+ * Monogram rather than a fixed mark, so the name in the dictionary is the only
+ * place the icon's letter comes from — change it there and the tab icon follows.
  */
 export default function Icon() {
   const name = getDictionary(defaultLocale).hero.name.trim();

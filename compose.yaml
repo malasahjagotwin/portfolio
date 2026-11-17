@@ -1,0 +1,55 @@
+# Deployment for proxi.cc.cd (VPS 159.223.93.196).
+#
+#   cp .env.example .env      # then fill in CONTACT_WEBHOOK_URL
+#   docker compose up -d --build
+#
+# `app` is deliberately not published to the host: only Caddy needs to reach
+# it, over the compose network, by service name. See `deploy/Caddyfile`.
+
+services:
+  app:
+    build: .
+    image: portfolio:latest
+    restart: unless-stopped
+    environment:
+      # Read at request time by src/app/api/contact/route.ts. If it is empty in
+      # production the endpoint answers 503 rather than dropping the message,
+      # so an unset value is a loud failure, not a silent one.
+      CONTACT_WEBHOOK_URL: ${CONTACT_WEBHOOK_URL:-}
+    expose:
+      - "3000"
+    healthcheck:
+      # The slim image has no curl; Node 22 ships fetch instead.
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/id').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      # The server needs a moment before it answers; without this the first
+      # check fails and the container is briefly reported unhealthy on boot.
+      start_period: 15s
+      retries: 3
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        # Caddy would otherwise race the app on a cold boot and serve 502s
+        # until the server is answering.
+        condition: service_healthy
+
+volumes:
+  # Certificates and ACME account live here. Losing them means re-issuing on
+  # every start, which can hit Let's Encrypt rate limits.
+  caddy_data:
+  caddy_config:

@@ -6,21 +6,23 @@ type ProjectItem = {
   title: string;
   description: string;
   tags: string[];
-        year: string;
+  year: string;
   href?: string;
 };
 
 const en = {
   meta: {
-    title: "Isal Nevada — Full-Stack Developer",
+    title: "Isal Nevada — Backend & Network Developer",
     description:
-      "Portfolio of Isal Nevada, a full-stack developer building fast, accessible and scalable web products with React, Next.js and TypeScript.",
+      "Portfolio of Isal Nevada, a backend and network developer building services and network tooling in Go.",
     keywords: [
-      "full-stack developer",
-      "web developer",
-      "React",
-      "Next.js",
-      "TypeScript",
+      "backend developer",
+      "network developer",
+      "Go",
+      "golang",
+      "Linux",
+      "networking",
+      "self-hosted",
       "portfolio",
     ],
   },
@@ -53,9 +55,9 @@ const en = {
     availability: "Available for new projects",
     greeting: "Hi, I'm",
     name: "Isal Nevada",
-    role: "Full-Stack Developer",
+    role: "Backend & Network Developer",
     tagline:
-      "I design and build fast, accessible and scalable web products — from pixel-perfect interfaces to the APIs behind them.",
+      "I build backend services and network tooling in Go — single-binary tools, self-hosted infrastructure, and the plumbing that keeps it reachable from outside the LAN.",
     ctaProjects: "View projects",
     ctaContact: "Get in touch",
   },
@@ -63,53 +65,45 @@ const en = {
     title: "About me",
     subtitle: "A short introduction",
     paragraphs: [
-      "I'm a full-stack developer with a focus on building products that feel effortless. I care about clean architecture, performance and the small details that make an interface a joy to use.",
-      "Over the years I've shipped web apps across fintech, SaaS and e-commerce — always close to both the user experience and the engineering that powers it.",
+      "I'm a backend and network developer. Most of what I build is Go: single-binary services and CLI tools that do one job without dragging a runtime along with them.",
+      "Outside of application code I spend most of my time on infrastructure — Linux hosts, systemd units, SSH tunnels and reverse proxies — keeping services that sit behind NAT reachable and dependable.",
     ],
     skillsTitle: "Tech I work with",
     skills: [
+      "Go",
       "TypeScript",
-      "React",
-      "Next.js",
-      "Node.js",
-      "Tailwind CSS",
-      "PostgreSQL",
-      "Prisma",
+      "JavaScript",
+      "Shell",
+      "C",
+      "Linux",
+      "systemd",
       "Docker",
-      "AWS",
-      "GraphQL",
-    ],
-    stats: [
-      { value: "5+", label: "Years of experience" },
-      { value: "40+", label: "Projects shipped" },
-      { value: "20+", label: "Happy clients" },
+      "Networking",
+      "SSH",
+      "Redis",
+      "PostgreSQL",
     ],
   },
   projects: {
     title: "Selected projects",
-    subtitle: "A few things I've built recently",
+    subtitle: "A few things I've built",
     viewLabel: "View project",
     items: [
       {
-        title: "Analytics Dashboard",
+        title: "Proxmox Reverse SSH Tunnel",
         description:
-          "A real-time analytics platform with custom charting, role-based access and sub-second query performance.",
-        tags: ["Next.js", "TypeScript", "PostgreSQL"],
-        year: "2025",
+          "Exposes Proxmox VE containers and VMs behind NAT through a public VPS using SSH reverse tunnels. systemd units keep the tunnel up and bring it back automatically when the forward fails.",
+        tags: ["Shell", "systemd", "SSH", "Networking"],
+        year: "2026",
+        href: "https://github.com/malasahjagotwin/proxmox-reverse-ssh",
       },
       {
-        title: "E-commerce Storefront",
+        title: "Bilingual Portfolio",
         description:
-          "Headless commerce storefront with blazing-fast search, optimistic cart and a fully typed checkout flow.",
-        tags: ["React", "Node.js", "Stripe"],
-        year: "2024",
-      },
-      {
-        title: "Design System",
-        description:
-          "An accessible component library with theming, documentation and automated visual regression tests.",
-        tags: ["React", "Tailwind CSS", "Storybook"],
-        year: "2024",
+          "This site. Next.js 16 App Router with Cache Components and Partial Prefetching, two typed dictionaries that have to stay in sync, and Tailwind CSS v4 with a CSS-first config.",
+        tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+        year: "2026",
+        href: "https://github.com/malasahjagotwin/portfolio",
       },
     ] as ProjectItem[],
   },

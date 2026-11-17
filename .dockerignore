@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+build
+coverage
+
+.git
+.github
+
+# Runtime config, not build input. CONTACT_WEBHOOK_URL is read by the server at
+# request time, so it belongs in the container environment, not the image.
+.env*
+
+# Nothing below is needed to build the app.
+*.md
+Dockerfile
+.dockerignore
+compose.yaml
+deploy

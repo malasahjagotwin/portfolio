@@ -23,19 +23,6 @@ export function About({ dict }: AboutProps) {
               {paragraph}
             </p>
           ))}
-
-          <dl className="grid grid-cols-3 gap-6 pt-6">
-            {dict.about.stats.map((stat) => (
-              <div key={stat.label}>
-                <dt className="text-2xl font-semibold text-foreground sm:text-3xl">
-                  {stat.value}
-                </dt>
-                <dd className="mt-1 text-xs text-muted sm:text-sm">
-                  {stat.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
 
         <div>

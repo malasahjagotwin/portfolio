@@ -1,0 +1,19 @@
+# Caddy gets and renews the certificate for proxi.cc.cd by itself; there is no
+# separate certbot step and nothing to copy into place.
+#
+# DNS for proxi.cc.cd must point at this host before the first start, otherwise
+# ACME validation fails and Caddy retries with backoff.
+
+proxi.cc.cd {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
+
+# If you would rather keep an existing nginx on 80/443, drop the `caddy`
+# service from compose.yaml, publish the app instead:
+#
+#   ports:
+#     - "127.0.0.1:3000:3000"
+#
+# and proxy to http://127.0.0.1:3000 from that nginx. Loopback-only binding
+# keeps the container off the public interface in both cases.
