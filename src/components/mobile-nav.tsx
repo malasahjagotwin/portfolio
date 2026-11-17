@@ -1,9 +1,10 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { navKeys } from "@/lib/site";
+import { useDismissable } from "@/lib/use-dismissable";
 
 type MobileNavProps = {
   nav: Dictionary["nav"];
@@ -12,28 +13,28 @@ type MobileNavProps = {
 
 export function MobileNav({ nav, labels }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
-  useEffect(() => {
-    if (!open) return;
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+  useDismissable(open, setOpen, containerRef, triggerRef);
 
   return (
-    <div className="sm:hidden">
+    <div ref={containerRef} className="sm:hidden">
       <button
+        ref={triggerRef}
         type="button"
         aria-label={open ? labels.close : labels.open}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:border-accent hover:text-accent"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-input-border bg-card text-foreground transition-colors hover:border-accent hover:text-accent"
       >
-        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        {open ? (
+          <X aria-hidden="true" className="h-5 w-5" />
+        ) : (
+          <Menu aria-hidden="true" className="h-5 w-5" />
+        )}
       </button>
 
       {open ? (

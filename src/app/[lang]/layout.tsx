@@ -136,8 +136,16 @@ export default async function LocaleLayout(
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col">
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-accent-foreground"
+            >
+              {dict.a11y.skipToContent}
+            </a>
             <Navbar locale={lang} dict={dict} />
-            <main className="flex-1">{props.children}</main>
+            <main id="main" tabIndex={-1} className="flex-1">
+              {props.children}
+            </main>
             <Footer dict={dict} />
           </div>
         </ThemeProvider>

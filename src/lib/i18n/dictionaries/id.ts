@@ -35,6 +35,9 @@ const id: Dictionary = {
     open: "Buka menu",
     close: "Tutup menu",
   },
+  a11y: {
+    skipToContent: "Lompat ke konten",
+  },
   hero: {
     availability: "Terbuka untuk proyek baru",
     greeting: "Hai, saya",

@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Bilingual (Indonesian / English) personal portfolio built with the Next.js 16 App Router.
 
-First, run the development server:
+## Stack
+
+- Next.js 16.4.6, App Router, Turbopack
+- React 19, TypeScript
+- Tailwind CSS v4 (CSS-first config in `src/app/globals.css`)
+- `next-themes` for light/dark/system
+- `lucide-react` for icons
+
+Two Next 16 features shape how this app is written, and both are on in `next.config.ts`:
+
+- **Cache Components** (`cacheComponents: true`) — Partial Prerendering is the default. Anything reading the current time, randomness, or request data has to be explicitly cached (`"use cache"`) or streamed behind `<Suspense>`. `src/components/footer.tsx` caches the current year this way.
+- **Partial Prefetching** (`partialPrefetching: true`) — links prefetch each route's App Shell by default.
+
+## Requirements
+
+Node **20.9 or newer** (`engines.node`). Verify before deploying: `next start` returns 500 on every route under bleeding-edge Node releases, and the build still succeeds, so the failure only shows up at runtime.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000 -> redirects to /id
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The root `/` redirects to `/id` (see `next.config.ts`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local`:
 
-## Learn More
+| Variable | Required | Purpose |
+|---|---|---|
+| `CONTACT_WEBHOOK_URL` | in production | Where `POST /api/contact` forwards submissions. Without it the endpoint returns **503** in production rather than silently discarding the message; in development it logs and returns 200 so the form stays testable. |
 
-To learn more about Next.js, take a look at the following resources:
+The webhook receives `{ name, email, message }` as JSON.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Editing the content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All copy is in two typed dictionaries that must stay in sync — `en.ts` defines the shape, `id.ts` is annotated with it:
 
-## Deploy on Vercel
+```
+src/lib/i18n/dictionaries/en.ts
+src/lib/i18n/dictionaries/id.ts
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Identity used outside the copy — site URL, contact email, social links — lives in `src/lib/site.ts`. `siteConfig.url` feeds `metadataBase`, canonical and hreflang tags, `sitemap.ts`, `robots.ts`, and the JSON-LD `@id`s, so changing it there changes all of them.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Structure
+
+```
+src/app/
+  [lang]/                 locale segment: layout, page, error, not-found
+    [...rest]/            routes unmatched paths through notFound() so they
+                          render the localized 404 inside the layout
+    opengraph-image.tsx   per-locale social card
+  api/contact/route.ts    contact endpoint (validation, rate limit, honeypot)
+  global-not-found.tsx    last-resort 404; bypasses the layout, so it applies
+                          the theme itself
+  icon.tsx, apple-icon     generated from the name's first letter
+  manifest.ts, robots.ts, sitemap.ts
+src/components/           navbar, mobile nav, theme + language switchers, form
+src/components/sections/  hero, about, projects, contact
+src/lib/i18n/             locales, dictionaries, useLocaleFromPathname
+```
+
+## Accessibility
+
+Verified against WCAG AA, not assumed:
+
+- Text pairings computed, not eyeballed. `--muted` is 4.76:1 on white and 7.86:1 on the dark background; status text uses `red-600`/`emerald-700` in light mode and the lighter `-400` steps in dark, because `red-500` (3.76:1) and `emerald-500` (2.54:1) fail on white.
+- Form fields use `--input-border` (4.76:1 on white) rather than `--border` (1.23:1). A field's background matches the page, so its edge is the only thing identifying it — the decorative border is fine for dividers, not for control boundaries.
+- Visible `:focus-visible` ring on every focusable element, via the base layer.
+- Skip-to-content link, `<main>` landmark, one `<h1>` per page, `<html lang>` per locale.
+- Popovers close on Escape and return focus to their trigger; `cursor: pointer` is restored in the base layer because Tailwind's preflight resets it.
+- `prefers-reduced-motion` disables smooth scrolling.
+
+## License
+
+Private personal project.

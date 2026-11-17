@@ -33,6 +33,9 @@ const en = {
     open: "Open menu",
     close: "Close menu",
   },
+  a11y: {
+    skipToContent: "Skip to content",
+  },
   hero: {
     availability: "Available for new projects",
     greeting: "Hi, I'm",

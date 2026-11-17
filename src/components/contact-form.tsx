@@ -9,12 +9,14 @@ type ContactFormProps = {
 };
 
 type Status = "idle" | "loading" | "success" | "error";
+type Field = "name" | "email" | "message";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const fieldOrder: readonly Field[] = ["name", "email", "message"];
 
 export function ContactForm({ strings }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,14 +27,20 @@ export function ContactForm({ strings }: ContactFormProps) {
     const message = String(data.get("message") ?? "").trim();
     const company = String(data.get("company") ?? "");
 
-    const nextErrors: Record<string, string> = {};
+    const nextErrors: Partial<Record<Field, string>> = {};
     if (!name) nextErrors.name = strings.required;
     if (!email) nextErrors.email = strings.required;
     else if (!emailPattern.test(email)) nextErrors.email = strings.invalidEmail;
     if (!message) nextErrors.message = strings.required;
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+
+    // Move focus to the first problem so it is announced and reachable.
+    const firstInvalid = fieldOrder.find((field) => nextErrors[field]);
+    if (firstInvalid) {
+      form.querySelector<HTMLElement>(`#${firstInvalid}`)?.focus();
+      return;
+    }
 
     setStatus("loading");
     try {
@@ -52,7 +60,8 @@ export function ContactForm({ strings }: ContactFormProps) {
   }
 
   const fieldClass =
-    "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted/70 focus:border-accent";
+    "w-full rounded-xl border border-input-border bg-background px-4 py-3 text-sm text-foreground transition-colors placeholder:text-muted";
+  const errorClass = "mt-1.5 text-xs text-red-600 dark:text-red-400";
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
@@ -85,10 +94,14 @@ export function ContactForm({ strings }: ContactFormProps) {
             type="text"
             autoComplete="name"
             placeholder={strings.namePlaceholder}
+            aria-invalid={errors.name ? true : undefined}
+            aria-describedby={errors.name ? "name-error" : undefined}
             className={fieldClass}
           />
           {errors.name ? (
-            <p className="mt-1.5 text-xs text-red-500">{errors.name}</p>
+            <p id="name-error" role="alert" className={errorClass}>
+              {errors.name}
+            </p>
           ) : null}
         </div>
 
@@ -105,10 +118,14 @@ export function ContactForm({ strings }: ContactFormProps) {
             type="email"
             autoComplete="email"
             placeholder={strings.emailPlaceholder}
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby={errors.email ? "email-error" : undefined}
             className={fieldClass}
           />
           {errors.email ? (
-            <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>
+            <p id="email-error" role="alert" className={errorClass}>
+              {errors.email}
+            </p>
           ) : null}
         </div>
       </div>
@@ -125,10 +142,14 @@ export function ContactForm({ strings }: ContactFormProps) {
           name="message"
           rows={5}
           placeholder={strings.messagePlaceholder}
+          aria-invalid={errors.message ? true : undefined}
+          aria-describedby={errors.message ? "message-error" : undefined}
           className={`${fieldClass} resize-y`}
         />
         {errors.message ? (
-          <p className="mt-1.5 text-xs text-red-500">{errors.message}</p>
+          <p id="message-error" role="alert" className={errorClass}>
+            {errors.message}
+          </p>
         ) : null}
       </div>
 
@@ -136,18 +157,25 @@ export function ContactForm({ strings }: ContactFormProps) {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          aria-busy={status === "loading"}
+          className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-4 w-4" aria-hidden="true" />
           {status === "loading" ? strings.sending : strings.submit}
         </button>
 
-        {status === "success" ? (
-          <p className="text-sm text-emerald-500">{strings.success}</p>
-        ) : null}
-        {status === "error" ? (
-          <p className="text-sm text-red-500">{strings.error}</p>
-        ) : null}
+        <div aria-live="polite">
+          {status === "success" ? (
+            <p className="text-sm text-emerald-700 dark:text-emerald-400">
+              {strings.success}
+            </p>
+          ) : null}
+          {status === "error" ? (
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {strings.error}
+            </p>
+          ) : null}
+        </div>
       </div>
     </form>
   );

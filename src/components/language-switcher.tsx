@@ -3,8 +3,9 @@
 import { Check, Globe } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { locales, type Locale } from "@/lib/i18n/config";
+import { useDismissable } from "@/lib/use-dismissable";
 
 type LanguageSwitcherProps = {
   locale: Locale;
@@ -19,17 +20,11 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelId = useId();
 
-  useEffect(() => {
-    function onClick(event: MouseEvent) {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
+  useDismissable(open, setOpen, containerRef, triggerRef);
 
   function hrefFor(target: Locale) {
     const segments = pathname.split("/");
@@ -39,21 +34,24 @@ export function LanguageSwitcher({
   }
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={containerRef} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         aria-label={label}
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
+        className="inline-flex h-11 items-center gap-1.5 rounded-full border border-input-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
       >
-        <Globe className="h-4 w-4" />
+        <Globe aria-hidden="true" className="h-4 w-4" />
         <span className="uppercase">{locale}</span>
       </button>
 
       {open ? (
         <div
+          id={panelId}
           role="menu"
           className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-lg"
         >
@@ -64,11 +62,11 @@ export function LanguageSwitcher({
               role="menuitemradio"
               aria-checked={item === locale}
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors hover:bg-background"
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-background"
             >
               <span className="flex-1">{labels[item]}</span>
               {item === locale ? (
-                <Check className="h-3.5 w-3.5 text-accent" />
+                <Check aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
               ) : null}
             </Link>
           ))}
