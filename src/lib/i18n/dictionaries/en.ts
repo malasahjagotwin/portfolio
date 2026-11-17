@@ -29,6 +29,10 @@ const en = {
     system: "System",
     toggle: "Toggle theme",
   },
+  menu: {
+    open: "Open menu",
+    close: "Close menu",
+  },
   hero: {
     availability: "Available for new projects",
     greeting: "Hi, I'm",

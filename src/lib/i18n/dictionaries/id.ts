@@ -31,6 +31,10 @@ const id: Dictionary = {
     system: "Sistem",
     toggle: "Ganti tema",
   },
+  menu: {
+    open: "Buka menu",
+    close: "Tutup menu",
+  },
   hero: {
     availability: "Terbuka untuk proyek baru",
     greeting: "Hai, saya",

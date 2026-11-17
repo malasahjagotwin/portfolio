@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -40,6 +41,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
             labels={{ id: dict.locale.id, en: dict.locale.en }}
           />
           <ThemeToggle labels={dict.theme} />
+          <MobileNav nav={dict.nav} labels={dict.menu} />
         </div>
       </div>
     </header>
