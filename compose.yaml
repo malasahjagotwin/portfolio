@@ -35,6 +35,10 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    environment:
+      # Defaults to the real domain. Set SITE_ADDRESS=:80 to smoke-test the
+      # whole stack over plain HTTP before DNS for proxi.cc.cd is live.
+      SITE_ADDRESS: ${SITE_ADDRESS:-proxi.cc.cd}
     ports:
       - "80:80"
       - "443:443"

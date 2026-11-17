@@ -3,8 +3,12 @@
 #
 # DNS for proxi.cc.cd must point at this host before the first start, otherwise
 # ACME validation fails and Caddy retries with backoff.
+#
+# The address comes from SITE_ADDRESS so the stack can be smoke-tested before
+# the domain resolves: `SITE_ADDRESS=:80 docker compose up -d --build` serves
+# this over plain HTTP with no certificate and no ACME attempt.
 
-proxi.cc.cd {
+{$SITE_ADDRESS:proxi.cc.cd} {
 	encode zstd gzip
 	reverse_proxy app:3000
 }

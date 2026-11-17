@@ -64,6 +64,16 @@ instead.
 DNS for the domain has to point at the host before the first start; Caddy
 validates over HTTP, so it cannot get a certificate otherwise.
 
+To smoke-test the stack before DNS is live, serve it over plain HTTP instead:
+
+```bash
+SITE_ADDRESS=:80 docker compose up -d --build
+curl -sI http://127.0.0.1/id | head -1
+```
+
+`SITE_ADDRESS` feeds the site address in `deploy/Caddyfile` and defaults to
+`proxi.cc.cd`, so the same config serves both cases without edits.
+
 To survive reboots, install the unit:
 
 ```bash
