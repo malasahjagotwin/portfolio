@@ -23,6 +23,7 @@ export function ContactForm({ strings }: ContactFormProps) {
     const name = String(data.get("name") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
+    const company = String(data.get("company") ?? "");
 
     const nextErrors: Record<string, string> = {};
     if (!name) nextErrors.name = strings.required;
@@ -38,7 +39,7 @@ export function ContactForm({ strings }: ContactFormProps) {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, company }),
       });
 
       if (!response.ok) throw new Error("Request failed");
@@ -55,6 +56,21 @@ export function ContactForm({ strings }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      {/* Honeypot — off-screen and hidden from assistive tech. See api/contact/route.ts */}
+      <div
+        aria-hidden="true"
+        className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden"
+      >
+        <label htmlFor="company">Company</label>
+        <input
+          id="company"
+          name="company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label
