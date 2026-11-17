@@ -2,10 +2,9 @@
 
 import { RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { defaultLocale, isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { useLocaleFromPathname } from "@/lib/i18n/use-locale";
 
 export default function LocaleError({
   error,
@@ -14,9 +13,7 @@ export default function LocaleError({
   error: unknown;
   retry: () => void;
 }) {
-  const pathname = usePathname();
-  const segment = pathname.split("/")[1] ?? "";
-  const locale = isLocale(segment) ? segment : defaultLocale;
+  const locale = useLocaleFromPathname();
   const dict = getDictionary(locale);
 
   useEffect(() => {
