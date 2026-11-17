@@ -58,13 +58,14 @@ export async function POST(request: Request) {
     return bad("Invalid JSON body", 400);
   }
 
-  const { name, email, message, company } = (payload ?? {}) as Record<string, unknown>;
+  const { name, email, message, botcheck } = (payload ?? {}) as Record<string, unknown>;
 
   /*
-   * Honeypot: a field no human sees or fills. Report success so the bot
-   * doesn't learn it was filtered, but drop the message.
+   * Honeypot: an off-screen checkbox no human sees or ticks, and that no
+   * autofill profile will ever check. Report success so the bot doesn't learn
+   * it was filtered, but drop the message.
    */
-  if (typeof company === "string" && company.trim() !== "") {
+  if (botcheck === true) {
     return NextResponse.json({ ok: true });
   }
 

@@ -25,7 +25,9 @@ export function ContactForm({ strings }: ContactFormProps) {
     const name = String(data.get("name") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
-    const company = String(data.get("company") ?? "");
+    // A checkbox is either present or absent; nothing in an autofill profile
+    // will ever tick it, so this cannot discard a real message.
+    const botcheck = data.get("botcheck") !== null;
 
     const nextErrors: Partial<Record<Field, string>> = {};
     if (!name) nextErrors.name = strings.required;
@@ -47,7 +49,7 @@ export function ContactForm({ strings }: ContactFormProps) {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message, company }),
+        body: JSON.stringify({ name, email, message, botcheck }),
       });
 
       if (!response.ok) throw new Error("Request failed");
@@ -70,11 +72,11 @@ export function ContactForm({ strings }: ContactFormProps) {
         aria-hidden="true"
         className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden"
       >
-        <label htmlFor="company">Company</label>
+        <label htmlFor="botcheck">Leave this unchecked</label>
         <input
-          id="company"
-          name="company"
-          type="text"
+          id="botcheck"
+          name="botcheck"
+          type="checkbox"
           tabIndex={-1}
           autoComplete="off"
         />
