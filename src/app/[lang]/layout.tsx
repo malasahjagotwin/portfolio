@@ -107,7 +107,12 @@ export default async function LocaleLayout(
         url: `${siteConfig.url}/${lang}`,
         email: `mailto:${siteConfig.email}`,
         knowsAbout: dict.about.skills,
-        sameAs: siteConfig.socials.map((social) => social.href),
+        image: `${siteConfig.url}/apple-icon`,
+        // A Discord invite is not a profile URL: sameAs should point at places
+        // that identify the person, not at a door into a server.
+        sameAs: siteConfig.socials
+          .filter((social) => social.key !== "discord")
+          .map((social) => social.href),
       },
       {
         "@type": "WebSite",
