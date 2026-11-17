@@ -90,6 +90,32 @@ export default async function LocaleLayout(
 
   const dict = getDictionary(lang);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${siteConfig.url}/#person`,
+        name: dict.hero.name,
+        jobTitle: dict.hero.role,
+        description: dict.meta.description,
+        url: `${siteConfig.url}/${lang}`,
+        email: `mailto:${siteConfig.email}`,
+        knowsAbout: dict.about.skills,
+        sameAs: siteConfig.socials.map((social) => social.href),
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: `${siteConfig.url}/${lang}`,
+        name: dict.hero.name,
+        description: dict.meta.description,
+        inLanguage: lang,
+        publisher: { "@id": `${siteConfig.url}/#person` },
+      },
+    ],
+  };
+
   return (
     <html
       lang={lang}
@@ -97,6 +123,12 @@ export default async function LocaleLayout(
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

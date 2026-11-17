@@ -118,6 +118,13 @@ const en = {
     invalidEmail: "Please enter a valid email address.",
     emailMe: "Or email me directly at",
   },
+  error: {
+    title: "Something went wrong",
+    description:
+      "An unexpected error occurred while loading this page. Try again, or head back home.",
+    retry: "Try again",
+    back: "Back to home",
+  },
   footer: {
     rights: "All rights reserved.",
     builtWith: "Built with Next.js and Tailwind CSS.",

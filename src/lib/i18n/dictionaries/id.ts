@@ -120,6 +120,13 @@ const id: Dictionary = {
     invalidEmail: "Masukkan alamat email yang valid.",
     emailMe: "Atau email langsung ke",
   },
+  error: {
+    title: "Terjadi kesalahan",
+    description:
+      "Ada error tak terduga saat memuat halaman ini. Coba lagi, atau kembali ke beranda.",
+    retry: "Coba lagi",
+    back: "Kembali ke beranda",
+  },
   footer: {
     rights: "Seluruh hak cipta dilindungi.",
     builtWith: "Dibangun dengan Next.js dan Tailwind CSS.",
