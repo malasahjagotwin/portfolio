@@ -22,7 +22,9 @@ export default function LocaleError({
 
   return (
     <section className="container-page flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <p className="text-sm font-semibold text-accent">Error</p>
+      <p className="text-sm font-semibold text-accent">
+        {dict.error.overline}
+      </p>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
         {dict.error.title}
       </h1>

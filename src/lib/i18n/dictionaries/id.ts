@@ -116,6 +116,7 @@ const id: Dictionary = {
     emailMe: "Atau email langsung ke",
   },
   error: {
+    overline: "Kesalahan",
     title: "Terjadi kesalahan",
     description:
       "Ada error tak terduga saat memuat halaman ini. Coba lagi, atau kembali ke beranda.",

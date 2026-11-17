@@ -126,6 +126,7 @@ const en = {
     emailMe: "Or email me directly at",
   },
   error: {
+    overline: "Error",
     title: "Something went wrong",
     description:
       "An unexpected error occurred while loading this page. Try again, or head back home.",
