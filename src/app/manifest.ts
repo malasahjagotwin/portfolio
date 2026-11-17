@@ -9,10 +9,15 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: dict.hero.name,
     description: dict.meta.description,
     start_url: `/${defaultLocale}`,
-    display: "standalone",
+    // "browser", not "standalone": installable PWAs need 192 and 512 icons,
+    // and shipping icons that small would make the claim a lie.
+    display: "browser",
     background_color: "#ffffff",
     theme_color: "#4f46e5",
     lang: defaultLocale,
-    icons: [{ src: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
+    icons: [
+      { src: "/icon", sizes: "32x32", type: "image/png" },
+      { src: "/apple-icon", sizes: "180x180", type: "image/png" },
+    ],
   };
 }

@@ -10,9 +10,10 @@ const paths: Record<string, string> = {
 
 type SocialLinksProps = {
   className?: string;
+  newTabLabel: string;
 };
 
-export function SocialLinks({ className }: SocialLinksProps) {
+export function SocialLinks({ className, newTabLabel }: SocialLinksProps) {
   return (
     <ul className={`flex items-center gap-2 ${className ?? ""}`}>
       {siteConfig.socials.map((social) => (
@@ -21,7 +22,7 @@ export function SocialLinks({ className }: SocialLinksProps) {
             href={social.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={social.label}
+            aria-label={`${social.label} ${newTabLabel}`}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted transition-colors hover:border-accent hover:text-accent"
           >
             <svg

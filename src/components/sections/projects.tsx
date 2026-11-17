@@ -48,7 +48,9 @@ export function Projects({ dict }: ProjectsProps) {
                 <span className="text-xs text-muted">{project.year}</span>
               </div>
 
-              <span className="sr-only">{dict.projects.viewLabel}</span>
+              <span className="sr-only">
+                {dict.projects.viewLabel} {dict.a11y.newTab}
+              </span>
             </a>
           </li>
         ))}

@@ -8,6 +8,13 @@ const limits = {
   message: 5000,
 } as const;
 
+/*
+ * Nothing in Next 16 caps an App Router request body: the only documented
+ * limit is the proxy body buffer, and it applies only when a proxy.ts exists.
+ * So the bound has to be ours, applied before the body is buffered.
+ */
+const MAX_BODY_BYTES = 16 * 1024;
+
 const rateLimit = { windowMs: 60_000, max: 5 } as const;
 
 /*
@@ -42,6 +49,41 @@ function bad(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
+/*
+ * Reads the body while enforcing a byte cap, so a chunked request without a
+ * Content-Length cannot make us buffer an arbitrary amount. Returns null when
+ * the cap is exceeded.
+ */
+async function readCapped(request: Request, maxBytes: number): Promise<string | null> {
+  const declared = Number(request.headers.get("content-length") ?? "");
+  if (Number.isFinite(declared) && declared > maxBytes) return null;
+
+  const reader = request.body?.getReader();
+  if (!reader) return "";
+
+  const chunks: Uint8Array[] = [];
+  let received = 0;
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    received += value.byteLength;
+    if (received > maxBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const merged = new Uint8Array(received);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(merged);
+}
+
 export async function POST(request: Request) {
   if (!(request.headers.get("content-type") ?? "").includes("application/json")) {
     return bad("Unsupported media type", 415);
@@ -51,9 +93,12 @@ export async function POST(request: Request) {
     return bad("Too many messages. Please try again in a minute.", 429);
   }
 
+  const body = await readCapped(request, MAX_BODY_BYTES);
+  if (body === null) return bad("Payload too large", 413);
+
   let payload: unknown;
   try {
-    payload = await request.json();
+    payload = JSON.parse(body);
   } catch {
     return bad("Invalid JSON body", 400);
   }

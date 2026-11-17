@@ -35,6 +35,7 @@ const en = {
   },
   a11y: {
     skipToContent: "Skip to content",
+    newTab: "(opens in a new tab)",
   },
   hero: {
     availability: "Available for new projects",

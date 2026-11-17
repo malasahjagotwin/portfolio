@@ -35,7 +35,6 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
         ref={triggerRef}
         type="button"
         aria-label={labels.toggle}
-        aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
@@ -51,10 +50,15 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
         />
       </button>
 
+      {/*
+       * A plain disclosure of toggle buttons. This deliberately does not claim
+       * role="menu": the ARIA menu pattern owes arrow-key navigation and focus
+       * management that a set of three buttons does not need, and asserting the
+       * role without the behaviour misleads assistive tech.
+       */}
       {open ? (
         <div
           id={panelId}
-          role="menu"
           className="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-lg"
         >
           {options.map((option) => {
@@ -64,8 +68,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
               <button
                 key={option.value}
                 type="button"
-                role="menuitemradio"
-                aria-checked={active}
+                aria-pressed={active}
                 onClick={() => {
                   setTheme(option.value);
                   setOpen(false);

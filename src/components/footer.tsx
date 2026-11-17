@@ -28,7 +28,7 @@ export async function Footer({ dict }: FooterProps) {
           <p className="mt-1 text-xs text-muted">{dict.footer.builtWith}</p>
         </div>
 
-        <SocialLinks />
+        <SocialLinks newTabLabel={dict.a11y.newTab} />
       </div>
     </footer>
   );

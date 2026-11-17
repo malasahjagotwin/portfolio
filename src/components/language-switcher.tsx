@@ -3,7 +3,7 @@
 import { Check, Globe } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { locales, type Locale } from "@/lib/i18n/config";
 import { useDismissable } from "@/lib/use-dismissable";
 
@@ -20,17 +20,30 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [hash, setHash] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
   useDismissable(open, setOpen, containerRef, triggerRef);
 
+  /*
+   * usePathname() drops the fragment, so a reader parked on #projects would be
+   * sent to the top of the page on a locale switch. Read it after mount to keep
+   * the first client render identical to the server one.
+   */
+  useEffect(() => {
+    const sync = () => setHash(window.location.hash);
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, []);
+
   function hrefFor(target: Locale) {
     const segments = pathname.split("/");
     segments[1] = target;
     const next = segments.join("/");
-    return next.length > 1 ? next : `/${target}`;
+    return (next.length > 1 ? next : `/${target}`) + hash;
   }
 
   return (
@@ -39,7 +52,6 @@ export function LanguageSwitcher({
         ref={triggerRef}
         type="button"
         aria-label={label}
-        aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
@@ -49,18 +61,17 @@ export function LanguageSwitcher({
         <span className="uppercase">{locale}</span>
       </button>
 
+      {/* Plain disclosure of language links — see the note in theme-toggle. */}
       {open ? (
         <div
           id={panelId}
-          role="menu"
           className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-lg"
         >
           {locales.map((item) => (
             <Link
               key={item}
               href={hrefFor(item)}
-              role="menuitemradio"
-              aria-checked={item === locale}
+              aria-current={item === locale ? "true" : undefined}
               onClick={() => setOpen(false)}
               className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-background"
             >

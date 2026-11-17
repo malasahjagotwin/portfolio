@@ -5,6 +5,15 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+/*
+ * `alt` must be a static string export, so it can't be localized per route the
+ * way the image itself is. Name and role are proper nouns, so one value is
+ * correct for both locales.
+ */
+export const alt = `${getDictionary(defaultLocale).hero.name} — ${
+  getDictionary(defaultLocale).hero.role
+}`;
+
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }

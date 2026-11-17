@@ -32,7 +32,7 @@ export function Contact({ dict }: ContactProps) {
             </a>
           </div>
 
-          <SocialLinks />
+          <SocialLinks newTabLabel={dict.a11y.newTab} />
         </div>
       </div>
     </Section>

@@ -48,7 +48,7 @@ export function Hero({ dict }: HeroProps) {
           </a>
         </div>
 
-        <SocialLinks className="mt-10" />
+        <SocialLinks className="mt-10" newTabLabel={dict.a11y.newTab} />
       </div>
     </section>
   );
